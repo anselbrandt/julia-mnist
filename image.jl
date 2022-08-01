@@ -16,10 +16,6 @@ flat = pic'[:]
 
 raw = rawview(channelview(flat))
 
-for pixel in raw
-    println(pixel)
-end
-
 data = reshape(raw, :)
 
 url = "https://anselbrandt.github.io/assets/cat.jpg"
@@ -28,8 +24,19 @@ download(url, "cat.jpg")
 
 cat = load("cat.jpg")
 
-catflat = cat'[:]
+smallcat = imresize(cat, (40, 40))
 
-catraw = (rawview ∘ channelview)(catflat)
+smallcatflat = smallcat'[:]
 
-catdata = reshape(catraw, :)
+smallcatraw = (rawview ∘ channelview)(smallcatflat)
+
+smallcatdata = reshape(smallcatraw, :)
+
+magic = UInt32(2051)
+images = UInt32(1)
+rows = UInt32(40)
+cols = UInt32(40)
+
+header = [magic; images; rows; cols]
+
+idxfile = Any[header; smallcatdata]
